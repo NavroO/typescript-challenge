@@ -8,20 +8,15 @@ type Space = {
   name: string;
 };
 
-const generateNumbersInRange = (from: number, to: number): number[] => {
-  return range(from, to);
-};
-
-const generateSpaces = (text: string, numbers: number[]) => {
-  return numbers.map((index) => ({
+const generateSpaces = (text: string) => (from: number, to: number) =>
+  range(from, to).map((index) => ({
     name: `${text} ${index}`,
   }));
-};
 
 const ALL_PARKING_SPACES: Space[] = [
-  ...generateSpaces("Kraków HQ", generateNumbersInRange(1, 20)),
-  ...generateSpaces("Milano", generateNumbersInRange(21, 50)),
-  ...generateSpaces("Munich", generateNumbersInRange(51, 80)),
+  ...generateSpaces("Kraków HQ")(1, 20),
+  ...generateSpaces("Milano")(21, 50),
+  ...generateSpaces("Munich")(51, 80),
 ];
 
 const CHANCE_OF_FAILURE = 0.1;
@@ -42,5 +37,6 @@ const searchSpaces = (searchText: string): Promise<Results> => {
     }, random(MIN_TIME_MILLIS, MAX_TIME_MILLIS, false));
   });
 };
+
 
 export { searchSpaces };
