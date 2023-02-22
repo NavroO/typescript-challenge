@@ -1,23 +1,36 @@
 import { useState, useEffect} from "react";
-import { delay } from "../service/helpers/delay";
-import { searchSpaces } from "../service/search";
 
-const SearchInput = () => {
+type Results = {
+  spaces?: Space[];
+  addresses?: Address[];
+};
+
+type Space = {
+  name: string;
+};
+
+type Address = {
+  address: string;
+};
+
+type SearchFn = (searchText: string) => Promise<Results>;
+
+interface SearchInputProps {
+  searchFn: SearchFn;
+}
+
+const SearchInput = ({ searchFn }: SearchInputProps) => {
   const [searchText, setSearchText] = useState("");
-  const [results, setResults] = useState<any>({ addresses: [] });
+  const [results, setResults] = useState<Results>({});
 
   const handleSearch = async (text: string) => {
     try {
-      const searchResults = await delay(500).then(() => searchSpaces(text));
-      console.log(searchResults);
+      const searchResults = await searchFn(text);
       setResults(searchResults);
-      console.log("results: ", results);
     } catch (error) {
       console.error(error);
     }
   };
-  
-  
 
   useEffect(() => {
     handleSearch(searchText);
@@ -30,11 +43,20 @@ const SearchInput = () => {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-      <ul>
-        {results.spaces.map((space: any) => (
-            <li key={space.id}>{space.name}</li>
-        ))}
-      </ul>
+      {results.spaces && (
+        <ul>
+          {results.spaces.map((space: Space) => (
+            <li key={space.name}>{space.name}</li>
+          ))}
+        </ul>
+      )}
+      {results.addresses && (
+        <ul>
+          {results.addresses.map((address: Address) => (
+            <li key={address.address}>{address.address}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

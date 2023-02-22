@@ -28,7 +28,7 @@ const CHANCE_OF_FAILURE = 0.1;
 const MIN_TIME_MILLIS = 100;
 const MAX_TIME_MILLIS = 1000;
 
-const searchSpaces = (searchText: string): Promise<Results> => {
+const searchAddresses = (searchText: string): Promise<Results> => {
   return new Promise((res, rej) => {
     setTimeout(() => {
       if (random() > CHANCE_OF_FAILURE) {
@@ -43,4 +43,4 @@ const searchSpaces = (searchText: string): Promise<Results> => {
   });
 };
 
-export { searchSpaces };
+export { searchAddresses };
