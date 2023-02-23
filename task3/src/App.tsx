@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Table, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import './App.css';
 
@@ -70,16 +70,21 @@ function App() {
   };
   
   return (
-    <div>
+    <Box sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      "flexDirection": "column"
+    }}>
       <input type="file" onChange={handleFiles} multiple />
-      <button onClick={compareKeys}>Compare Keys</button>
+      <Button variant="contained" onClick={compareKeys}>Compare Keys</Button>
       {missingKeys.length > 0 &&
         missingKeys.map((key, index) => (
           <p key={index}>
             {key} is missing in one or more of the files you uploaded
           </p>
         ))}
-    </div>
+    </Box>
   );
 }
 
