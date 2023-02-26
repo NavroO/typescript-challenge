@@ -1,13 +1,16 @@
-import './App.css';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import EditLocationIcon from '@mui/icons-material/EditLocation';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Button, TextField } from '@mui/material';
 import { Container } from '@mui/system';
+import { useState } from 'react';
 
 function App() {
+  const [showPassword, setShowPassword] = useState(false)
+
   return (
     <Container>
       <Accordion sx={{ 
@@ -62,10 +65,10 @@ function App() {
             }} 
             id="standard-basic" 
             InputLabelProps={{ style: { color: '#F0740D' } }} 
-            InputProps={{ style: { color: '#F0740D' } }} 
+            InputProps={{ style: { color: '#F0740D' }, endAdornment: showPassword ? <VisibilityOffIcon sx={{ color: '#F0740D' }} onClick={() => setShowPassword(false)} /> : <VisibilityIcon sx={{ color: '#F0740D' }} onClick={() => setShowPassword(true)} /> }}
             label="Password" 
-            variant="standard" 
-            type="password" 
+            variant="standard"
+            type={showPassword ? "text" : "password"}
           />
           <Button variant="text"
             disableRipple={true}
