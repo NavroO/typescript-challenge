@@ -1,27 +1,21 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
-type Results = {
-  spaces?: Space[];
-  addresses?: Address[];
+type Results<T> = {
+  data?: T[];
 };
 
-type Space = {
-  name: string;
-};
-
-type Address = {
-  address: string;
-};
-
-type SearchFn = (searchText: string) => Promise<Results>;
-
-interface SearchInputProps {
-  searchFn: SearchFn;
+interface SearchFn<T> {
+  (searchText: string): Promise<Results<T>>;
 }
 
-const SearchInput = ({ searchFn }: SearchInputProps) => {
+interface SearchInputProps<T> {
+  searchFn: SearchFn<T>;
+  renderResult: (item: T) => JSX.Element;
+}
+
+const SearchInput = <T,>({ searchFn, renderResult }: SearchInputProps<T>) => {
   const [searchText, setSearchText] = useState("");
-  const [results, setResults] = useState<Results>({});
+  const [results, setResults] = useState<Results<T>>({});
 
   const handleSearch = async (text: string) => {
     try {
@@ -43,17 +37,10 @@ const SearchInput = ({ searchFn }: SearchInputProps) => {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-      {results.spaces && (
+      {results.data && (
         <ul>
-          {results.spaces.map((space: Space) => (
-            <li key={space.name}>{space.name}</li>
-          ))}
-        </ul>
-      )}
-      {results.addresses && (
-        <ul>
-          {results.addresses.map((address: Address) => (
-            <li key={address.address}>{address.address}</li>
+          {results.data.map((item: T) => (
+            <li key={JSON.stringify(item)}>{renderResult(item)}</li>
           ))}
         </ul>
       )}
