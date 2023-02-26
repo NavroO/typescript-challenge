@@ -1,24 +1,19 @@
 import { useState, useEffect } from "react";
+import { delay } from "../helpers/delay";
+import { Results, SearchFn } from "../types/types";
 
-type Results<T> = {
-  data?: T[];
-};
-
-interface SearchFn<T> {
-  (searchText: string): Promise<Results<T>>;
-}
-
-interface SearchInputProps<T> {
+type SearchInputProps<T> = {
   searchFn: SearchFn<T>;
-  renderResult: (item: T) => JSX.Element;
-}
+  renderResult?: (data: T[]) => JSX.Element;
+};
 
 const SearchInput = <T,>({ searchFn, renderResult }: SearchInputProps<T>) => {
   const [searchText, setSearchText] = useState("");
-  const [results, setResults] = useState<Results<T>>({});
+  const [results, setResults] = useState<Results<T>>({ data: [] });
 
   const handleSearch = async (text: string) => {
     try {
+      await delay(500);
       const searchResults = await searchFn(text);
       setResults(searchResults);
     } catch (error) {
@@ -37,15 +32,10 @@ const SearchInput = <T,>({ searchFn, renderResult }: SearchInputProps<T>) => {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-      {results.data && (
-        <ul>
-          {results.data.map((item: T) => (
-            <li key={JSON.stringify(item)}>{renderResult(item)}</li>
-          ))}
-        </ul>
-      )}
+      {renderResult && results.data && renderResult(results.data)}
     </div>
   );
 };
+
 
 export default SearchInput;

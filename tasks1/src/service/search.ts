@@ -1,12 +1,6 @@
 import { range, random } from "lodash";
+import { Space, SearchFn } from "../types/types";
 
-type Results = {
-  spaces: Space[];
-};
-
-type Space = {
-  name: string;
-};
 
 const generateSpaces = (text: string) => (from: number, to: number) =>
   range(from, to).map((index) => ({
@@ -23,14 +17,14 @@ const CHANCE_OF_FAILURE = 0.1;
 const MIN_TIME_MILLIS = 100;
 const MAX_TIME_MILLIS = 1000;
 
-const searchSpaces = (searchText: string): Promise<Results> => {
+const searchSpaces: SearchFn<Space> = (searchText) => {
   return new Promise((res, rej) => {
     setTimeout(() => {
       if (random() > CHANCE_OF_FAILURE) {
         const spaces = ALL_PARKING_SPACES.filter(
           ({ name }) => name.indexOf(searchText) !== -1
         );
-        res({ spaces });
+        res({ data: spaces });
       } else {
         rej(new Error("Network error"));
       }
