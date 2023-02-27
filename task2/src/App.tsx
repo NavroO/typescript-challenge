@@ -4,78 +4,75 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
+import EditLocationIcon from '@mui/icons-material/EditLocation';
 import { Container } from '@mui/system';
 import { useState } from 'react';
+import { accordionStyles, buttonStyles, inputLabelStyles, summaryStyles, textFieldStyles } from './App.style';
 
 function App() {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
     <Container>
-      <Accordion sx={{ 
-          backgroundColor: '#FFF9ED',
-          maxWidth: '500px',
-          transform: 'none',
-        }}>
+      <Accordion sx={accordionStyles}>
         <AccordionSummary
-          sx={{
-            transform: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
+          sx={summaryStyles}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography>Personal data</Typography>          
-        </AccordionSummary>
-        <AccordionDetails           
-          sx={{
-            display: 'flex', 
-            alignItems: "center", 
-            justifyContent: "center", 
-            flexDirection: "column",
-          }}>
-          <TextField 
-            sx={{
-              width: '100%', 
-              marginBottom: "20px"
-            }} 
-            InputLabelProps={{ style: { color: '#F0740D' } }} 
-            InputProps={{ style: { color: '#F0740D' } }} 
-            id="standard-basic" 
-            label="Name" 
-            variant="standard" 
-          />
-         <TextField
-            id="standard-basic"
-            label="Email"
-            sx={{
-              width: '100%', 
-              marginBottom: "20px"
-            }} 
-            variant="standard"
-            InputLabelProps={{ style: { color: '#F0740D' } }}
-          />
-          <TextField 
-            sx={{
-              width: '100%', 
-              marginBottom: "20px"
-            }} 
-            id="standard-basic" 
-            InputLabelProps={{ style: { color: '#F0740D' } }} 
-            InputProps={{ style: { color: '#F0740D' }, endAdornment: showPassword ? <VisibilityOffIcon sx={{ color: '#F0740D' }} onClick={() => setShowPassword(false)} /> : <VisibilityIcon sx={{ color: '#F0740D' }} onClick={() => setShowPassword(true)} /> }}
-            label="Password" 
-            variant="standard"
-            type={showPassword ? "text" : "password"}
-          />
-          <Button variant="text"
-            disableRipple={true}
-            sx={{
+          <Box sx={{ flexGrow: 1, display: "flex", alignItems: 'center' }}>
+            <Typography sx={{margin: 0}}>Personal data</Typography>
+          </Box>
+          <Box sx={{ alignItems: 'center', display: 'flex' }}>
+            <Button variant="outlined" disableRipple sx={{
               color: '#F0740D',
-            }}
-          >
+              borderColor: '#F0740D',
+              '&:hover': {
+                borderColor: '#F0740D',
+              },
+            }}>
+              <EditLocationIcon sx={{
+                color: '#F0740D',
+              }} />
+              CHANGE
+            </Button>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <TextField
+            sx={textFieldStyles}
+            InputLabelProps={{ style: inputLabelStyles }}
+            InputProps={{ style: { color: '#F0740D' } }}
+            id="custom-text-field"
+            label="Name"
+            variant="standard"
+          />
+          <TextField
+            sx={textFieldStyles}
+            InputLabelProps={{ style: inputLabelStyles }}
+            InputProps={{ style: { color: '#F0740D' } }}
+            id="custom-text-field"
+            label="Email"
+            variant="standard"
+          />
+          <TextField
+            sx={textFieldStyles}
+            id="custom-text-field"
+            InputProps={{ style: { color: '#F0740D' }, endAdornment: showPassword ? <VisibilityOffIcon sx={{ color: '#F0740D' }} onClick={() => setShowPassword(false)} /> : <VisibilityIcon sx={{ color: '#F0740D' }} onClick={() => setShowPassword(true)} /> }}
+            InputLabelProps={{ style: inputLabelStyles }}
+            label="Password"
+            variant="standard"
+            type={showPassword ? 'text' : 'password'}
+          />
+          <Button variant="text" disableRipple sx={buttonStyles}>
             SAVE
           </Button>
         </AccordionDetails>
