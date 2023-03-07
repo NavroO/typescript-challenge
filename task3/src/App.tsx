@@ -1,10 +1,11 @@
 import { Box, Button, TextField } from '@mui/material';
 import { useState } from 'react';
+import keyCompareService from './service/keyCompareService';
 import './App.css';
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
-  const [missingKeys, setMissingKeys] = useState<{ [key: string]: number }>({});
+  const [missingKeys, setMissingKeys] = useState({});
   const [fileContents, setFileContents] = useState<string[]>([]);
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,10 +29,10 @@ function App() {
       console.log('Please upload at least two files');
       return;
     }
-
+  
     const readers = files.map((file) => new FileReader());
     const objects: any[] = [];
-
+  
     readers.forEach((reader, i) => {
       reader.onload = () => {
         try {
@@ -49,17 +50,18 @@ function App() {
             const allKeys = new Set(
               objects.map((obj) => getKeys(obj)).flat()
             );
-
-            const missingKeysObj: { [key: string]: number } = {};
+  
+            const missingKeysObj: { [key: string]: string[] } = {};
             for (const key of allKeys) {
-              let count = 0;
-              for (const keys of objects.map((obj) => getKeys(obj))) {
+              const fileNames: string[] = [];
+              for (let j = 0; j < files.length; j++) {
+                const keys = getKeys(objects[j]);
                 if (!keys.includes(key)) {
-                  count++;
+                  fileNames.push(files[j].name);
                 }
               }
-              if (count > 0) {
-                missingKeysObj[key] = count;
+              if (fileNames.length > 0) {
+                missingKeysObj[key] = fileNames;
               }
             }
             setMissingKeys(missingKeysObj);
@@ -68,7 +70,7 @@ function App() {
           console.log(`Error parsing JSON in file ${files[i].name}:`, e);
         }
       };
-
+  
       reader.readAsText(files[i]);
     });
   };
@@ -84,6 +86,10 @@ function App() {
     return keys;
   };
 
+  const handleCompare = () => {
+    keyCompareService.compareKeys(files, setMissingKeys);
+  };
+
   return (
     <Box sx={{
       display: "flex",
@@ -92,7 +98,7 @@ function App() {
       "flexDirection": "column"
     }}>
       <input type="file" onChange={handleFiles} multiple />
-      <Button variant="contained" onClick={compareKeys}>
+      <Button variant="contained" onClick={handleCompare}>
         Compare Keys
       </Button>
       <Box sx={{
@@ -123,12 +129,15 @@ function App() {
             <h2>Missing Keys:</h2>
             <ul>
               {Object.entries(missingKeys)
-                .sort(([key1, count1], [key2, count2]) =>
+                .sort(([key1, files1], [key2, files2]) =>
                   key1.localeCompare(key2)
                 )
-                .map(([key, count]) => (
+                .map(([key, files]) => (
                   <li key={key}>
-                    {key} is missing in {count} file(s) you uploaded
+                    {/* @ts-ignore */}
+                    {key} is missing in {files.length} file(s) you uploaded:{" "}
+                    {/* @ts-ignore */}
+                    {files.join(", ")}
                   </li>
                 ))}
             </ul>
